@@ -2,13 +2,15 @@ package edu.AvaliadorFilmesSeries.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.Embeddable;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Embeddable
 public class Movie {
     @JsonProperty("Title")
     private String title;
     @JsonProperty("Year")
-    private int year;
+    private String releaseYear;
     @JsonProperty("Runtime")
     private String runtime;
     @JsonProperty("Director")
@@ -24,12 +26,12 @@ public class Movie {
         this.title = title;
     }
 
-    public int getYear() {
-        return year;
+    public String getYear() {
+        return releaseYear;
     }
 
-    public void setYear(int year) {
-        this.year = year;
+    public void setYear(String releaseYear) {
+        this.releaseYear = releaseYear;
     }
 
     public String getRuntime() {
@@ -60,7 +62,7 @@ public class Movie {
     public String toString() {
         return "Movie{" +
                 "title='" + title + '\'' +
-                ", year=" + year +
+                ", year=" + releaseYear +
                 ", runtime='" + runtime + '\'' +
                 ", director='" + director + '\'' +
                 ", plot='" + plot + '\'' +

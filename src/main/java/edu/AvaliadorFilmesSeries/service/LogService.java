@@ -5,12 +5,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.AvaliadorFilmesSeries.client.OmdbApiClient;
 import edu.AvaliadorFilmesSeries.model.Log;
 import edu.AvaliadorFilmesSeries.model.Movie;
-import feign.Response;
+import edu.AvaliadorFilmesSeries.repository.LogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
+
+import java.util.List;
 
 @Service
 public class LogService {
@@ -18,10 +20,18 @@ public class LogService {
     @Autowired
     private OmdbApiClient omdbApiClient;
     @Autowired
+    private LogRepository logRepository;
+    @Autowired
     private ObjectMapper objectMapper;
 
     @Value("${omdb.api.key}")
     private String apiKey;
+
+    public ResponseEntity<List<Log>> getAllLogs() {
+        List<Log> response = logRepository.findAll();
+        return ResponseEntity.status(HttpStatus.OK).body(logRepository.findAll());
+    }
+
 
     public void createLog(String movieTitle, int stars, String critic){
         try{
@@ -32,14 +42,22 @@ public class LogService {
             Movie movie = mapper.readValue(responseBody, Movie.class);
 
             if(stars > 10){
-                throw new RuntimeException("A avaliação deve ser de 0 à 10 estrelas");
+                throw new IllegalArgumentException("A avaliação deve ser de 0 à 10 estrelas");
             }
 
             Log log = new Log(stars, movie, critic);
+
+            logRepository.save(log);
+
+
         } catch (JsonProcessingException e){
             System.out.println("Erro ao desserializar o Json: " + e.getMessage());
-        }catch (RuntimeException e){
+        }catch (IllegalArgumentException e){
             System.out.println("Erro inesperado: " + e.getMessage());
         }
+    }
+
+    public void deleteLog(int id){
+        logRepository.deleteById(id);
     }
 }
