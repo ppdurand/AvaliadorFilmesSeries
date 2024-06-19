@@ -15,8 +15,8 @@ public class MovieService {
     @Value("${omdb.api.key}")
     private String apiKey;
 
-    public String getMovieBytitle(String title){
+    public ResponseEntity<String> getMovieBytitle(String title){
         ResponseEntity<String> response = omdbApiClient.searchByTitle(title, apiKey);
-        return response.getBody();
+        return response;
     }
 }
