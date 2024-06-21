@@ -6,6 +6,7 @@ import edu.AvaliadorFilmesSeries.client.OmdbApiClient;
 import edu.AvaliadorFilmesSeries.model.Log;
 import edu.AvaliadorFilmesSeries.model.Movie;
 import edu.AvaliadorFilmesSeries.repository.LogRepository;
+import edu.AvaliadorFilmesSeries.service.interfaces.IService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -15,7 +16,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class LogService {
+public class LogService implements IService<Log> {
 
     @Autowired
     private OmdbApiClient omdbApiClient;
@@ -27,13 +28,13 @@ public class LogService {
     @Value("${omdb.api.key}")
     private String apiKey;
 
-    public ResponseEntity<List<Log>> getAllLogs() {
+    @Override
+    public ResponseEntity<List<Log>> getAll() {
         List<Log> response = logRepository.findAll();
         return ResponseEntity.status(HttpStatus.OK).body(logRepository.findAll());
     }
 
-
-    public void createLog(String movieTitle, int stars, String critic){
+    public void create(String movieTitle, int stars, String critic){
         try{
             ResponseEntity<String> response = omdbApiClient.searchByTitle(movieTitle, apiKey);
             String responseBody = response.getBody();
@@ -57,7 +58,8 @@ public class LogService {
         }
     }
 
-    public void deleteLog(int id){
+    @Override
+    public void delete(int id){
         logRepository.deleteById(id);
     }
 }

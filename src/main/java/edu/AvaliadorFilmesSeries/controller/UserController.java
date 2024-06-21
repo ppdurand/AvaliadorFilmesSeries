@@ -20,7 +20,7 @@ public class UserController {
 
     @PostMapping("/new")
     public void postUser(@RequestParam("name") String name, @RequestParam("bio") String bio){
-        userService.createUser(name, bio);
+        userService.create(name, bio);
     }
 
     @PutMapping("/edit/{id}")

@@ -3,6 +3,7 @@ package edu.AvaliadorFilmesSeries.service;
 import edu.AvaliadorFilmesSeries.dto.EditUserDTO;
 import edu.AvaliadorFilmesSeries.model.User;
 import edu.AvaliadorFilmesSeries.repository.UserRepository;
+import edu.AvaliadorFilmesSeries.service.interfaces.IService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -12,15 +13,16 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class UserService {
+public class UserService implements IService<User> {
     @Autowired
     private UserRepository userRepository;
 
-    public ResponseEntity<List<User>> getAllUser(){
+    @Override
+    public ResponseEntity<List<User>> getAll(){
         return ResponseEntity.status(HttpStatus.OK).body(userRepository.findAll());
     }
 
-    public void createUser(String name, String bio){
+    public void create(String name, String bio){
         User user = new User(name, bio);
         this.userRepository.save(user);
     }
@@ -34,6 +36,7 @@ public class UserService {
         });
     }
 
+    @Override
     public void delete(int id){
         userRepository.deleteById(id);
     }

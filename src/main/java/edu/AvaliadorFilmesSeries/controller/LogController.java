@@ -18,16 +18,16 @@ public class LogController {
 
     @GetMapping()
     public ResponseEntity<List<Log>> getAllLogs(){
-        return logService.getAllLogs();
+        return logService.getAll();
     }
     @PostMapping("/newLog/{title}")
     public void postLog(@PathVariable("title") String title, @RequestParam("stars") int stars,
                      @RequestParam("critic") String critic){
-        logService.createLog(title, stars, critic);
+        logService.create(title, stars, critic);
     }
 
     @DeleteMapping("/delete/{id}")
     public void deleteLog(@PathVariable("id") int id){
-        this.logService.deleteLog(id);
+        this.logService.delete(id);
     }
 }
