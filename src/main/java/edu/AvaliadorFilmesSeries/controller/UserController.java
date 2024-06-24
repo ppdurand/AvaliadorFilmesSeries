@@ -15,7 +15,7 @@ public class UserController {
     private UserService userService;
     @GetMapping
     public ResponseEntity<List<User>> getAllUsers(){
-        return userService.getAllUser();
+        return userService.getAll();
     }
 
     @PostMapping("/new")

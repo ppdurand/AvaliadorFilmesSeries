@@ -22,8 +22,8 @@ public class LogController {
     }
     @PostMapping("/newLog/{title}")
     public void postLog(@PathVariable("title") String title, @RequestParam("stars") int stars,
-                     @RequestParam("critic") String critic){
-        logService.create(title, stars, critic);
+                     @RequestParam("critic") String critic, @RequestParam("userId") int userId){
+        logService.create(title, stars, critic, userId);
     }
 
     @DeleteMapping("/delete/{id}")

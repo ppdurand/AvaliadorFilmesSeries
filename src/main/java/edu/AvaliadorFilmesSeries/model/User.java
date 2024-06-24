@@ -63,7 +63,7 @@ public class User {
         this.bio = bio;
     }
 
-    public void setLogs(List<Log> logs) {
-        this.logs = logs;
+    public void setLog(Log log) {
+        this.logs.add(log);
     }
 }

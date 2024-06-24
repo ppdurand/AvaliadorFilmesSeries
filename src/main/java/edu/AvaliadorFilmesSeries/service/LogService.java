@@ -5,7 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.AvaliadorFilmesSeries.client.OmdbApiClient;
 import edu.AvaliadorFilmesSeries.model.Log;
 import edu.AvaliadorFilmesSeries.model.Movie;
+import edu.AvaliadorFilmesSeries.model.User;
 import edu.AvaliadorFilmesSeries.repository.LogRepository;
+import edu.AvaliadorFilmesSeries.repository.UserRepository;
 import edu.AvaliadorFilmesSeries.service.interfaces.IService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class LogService implements IService<Log> {
@@ -22,6 +25,8 @@ public class LogService implements IService<Log> {
     private OmdbApiClient omdbApiClient;
     @Autowired
     private LogRepository logRepository;
+    @Autowired
+    private UserRepository userRepository;
     @Autowired
     private ObjectMapper objectMapper;
 
@@ -34,7 +39,7 @@ public class LogService implements IService<Log> {
         return ResponseEntity.status(HttpStatus.OK).body(logRepository.findAll());
     }
 
-    public void create(String movieTitle, int stars, String critic){
+    public void create(String movieTitle, int stars, String critic, int userId){
         try{
             ResponseEntity<String> response = omdbApiClient.searchByTitle(movieTitle, apiKey);
             String responseBody = response.getBody();
@@ -46,15 +51,24 @@ public class LogService implements IService<Log> {
                 throw new IllegalArgumentException("A avaliação deve ser de 0 à 10 estrelas");
             }
 
-            Log log = new Log(stars, movie, critic);
-
-            logRepository.save(log);
+            Optional<User> optionalUser = userRepository.findById(userId);
+            if(optionalUser.isPresent()){
+                Log log = new Log(stars, critic, movie, optionalUser.get());
+                optionalUser.get().setLog(log);
+                logRepository.save(log);
+            }
+            else{
+                throw new Exception("Usuário não encontrado/Não existe");
+            }
 
 
         } catch (JsonProcessingException e){
             System.out.println("Erro ao desserializar o Json: " + e.getMessage());
         }catch (IllegalArgumentException e){
             System.out.println("Erro inesperado: " + e.getMessage());
+        }
+        catch (Exception e){
+            System.out.println("Erro: " + e.getMessage());
         }
     }
 

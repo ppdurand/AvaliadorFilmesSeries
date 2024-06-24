@@ -12,12 +12,16 @@ public class Log {
     private String critic;
     @Embedded
     private Movie movie;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
 
-    public Log(double stars, Movie movie, String critic) {
+    public Log(double stars, String critic, Movie movie, User user) {
         this.stars = stars;
-        this.movie = movie;
         this.critic = critic;
+        this.movie = movie;
+        this.user = user;
     }
 
     public Log() {
@@ -62,6 +66,7 @@ public class Log {
                 ", stars=" + stars +
                 ", critic='" + critic + '\'' +
                 ", movie=" + movie +
+                ", user=" + user.getName() +
                 '}';
     }
 }
