@@ -43,21 +43,6 @@ public class Log {
         return critic;
     }
 
-    public void setStars(double stars) {
-        this.stars = stars;
-    }
-
-    public void setCritic(String critic) {
-        this.critic = critic;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public void setMovie(Movie movie) {
-        this.movie = movie;
-    }
 
     @Override
     public String toString() {

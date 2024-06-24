@@ -35,7 +35,6 @@ public class LogService implements IService<Log> {
 
     @Override
     public ResponseEntity<List<Log>> getAll() {
-        List<Log> response = logRepository.findAll();
         return ResponseEntity.status(HttpStatus.OK).body(logRepository.findAll());
     }
 
@@ -44,8 +43,7 @@ public class LogService implements IService<Log> {
             ResponseEntity<String> response = omdbApiClient.searchByTitle(movieTitle, apiKey);
             String responseBody = response.getBody();
 
-            ObjectMapper mapper = new ObjectMapper();
-            Movie movie = mapper.readValue(responseBody, Movie.class);
+            Movie movie = objectMapper.readValue(responseBody, Movie.class);
 
             if(stars > 10){
                 throw new IllegalArgumentException("A avaliação deve ser de 0 à 10 estrelas");

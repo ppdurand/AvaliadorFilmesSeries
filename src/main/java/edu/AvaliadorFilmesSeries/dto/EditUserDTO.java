@@ -6,8 +6,6 @@ public class EditUserDTO {
     private String name;
     private String bio;
 
-    public EditUserDTO() {
-    }
 
     public EditUserDTO(String name, String bio) {
         this.name = name;
