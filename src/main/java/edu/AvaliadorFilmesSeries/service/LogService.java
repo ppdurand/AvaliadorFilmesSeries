@@ -3,6 +3,8 @@ package edu.AvaliadorFilmesSeries.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.AvaliadorFilmesSeries.client.OmdbApiClient;
+import edu.AvaliadorFilmesSeries.exceptions.NotValidStarsNumber;
+import edu.AvaliadorFilmesSeries.exceptions.UserNotFoundException;
 import edu.AvaliadorFilmesSeries.model.Log;
 import edu.AvaliadorFilmesSeries.model.Movie;
 import edu.AvaliadorFilmesSeries.model.User;
@@ -38,36 +40,28 @@ public class LogService implements IService<Log> {
         return ResponseEntity.status(HttpStatus.OK).body(logRepository.findAll());
     }
 
-    public void create(String movieTitle, int stars, String critic, int userId){
-        try{
-            ResponseEntity<String> response = omdbApiClient.searchByTitle(movieTitle, apiKey);
-            String responseBody = response.getBody();
+    public ResponseEntity<String> create(String movieTitle, int stars, String critic, int userId) throws JsonProcessingException {
+        ResponseEntity<String> response = omdbApiClient.searchByTitle(movieTitle, apiKey);
+        String responseBody = response.getBody();
 
-            Movie movie = objectMapper.readValue(responseBody, Movie.class);
+        Movie movie = objectMapper.readValue(responseBody, Movie.class);
 
-            if(stars > 10){
-                throw new IllegalArgumentException("A avaliação deve ser de 0 à 10 estrelas");
-            }
-
-            Optional<User> optionalUser = userRepository.findById(userId);
-            if(optionalUser.isPresent()){
-                Log log = new Log(stars, critic, movie, optionalUser.get());
-                optionalUser.get().setLog(log);
-                logRepository.save(log);
-            }
-            else{
-                throw new Exception("Usuário não encontrado/Não existe");
-            }
-
-
-        } catch (JsonProcessingException e){
-            System.out.println("Erro ao desserializar o Json: " + e.getMessage());
-        }catch (IllegalArgumentException e){
-            System.out.println("Erro inesperado: " + e.getMessage());
+        if(stars > 10){
+            throw new NotValidStarsNumber();
         }
-        catch (Exception e){
-            System.out.println("Erro: " + e.getMessage());
+
+        Optional<User> optionalUser = userRepository.findById(userId);
+        if(optionalUser.isPresent()){
+            Log log = new Log(stars, critic, movie, optionalUser.get());
+            optionalUser.get().setLog(log);
+            logRepository.save(log);
         }
+        else{
+            throw new UserNotFoundException();
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body("Avaliação feita com sucesso");
+
     }
 
     @Override

@@ -1,5 +1,6 @@
 package edu.AvaliadorFilmesSeries.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import edu.AvaliadorFilmesSeries.model.Log;
 import edu.AvaliadorFilmesSeries.service.LogService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +20,9 @@ public class LogController {
         return logService.getAll();
     }
     @PostMapping("/newLog/{title}")
-    public void postLog(@PathVariable("title") String title, @RequestParam("stars") int stars,
-                     @RequestParam("critic") String critic, @RequestParam("userId") int userId){
-        logService.create(title, stars, critic, userId);
+    public ResponseEntity<String> postLog(@PathVariable("title") String title, @RequestParam("stars") int stars,
+                     @RequestParam("critic") String critic, @RequestParam("userId") int userId) throws JsonProcessingException {
+        return logService.create(title, stars, critic, userId);
     }
 
     @DeleteMapping("/delete/{id}")
