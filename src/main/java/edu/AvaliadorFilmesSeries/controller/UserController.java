@@ -18,10 +18,10 @@ public class UserController {
         return userService.getAll();
     }
 
-    @PostMapping("/new")
-    public void postUser(@RequestParam("name") String name, @RequestParam("bio") String bio){
-        userService.create(name, bio);
-    }
+//    @PostMapping("/new")
+//    public void postUser(@RequestParam("name") String name, @RequestParam("bio") String bio){
+//        userService.create(name, bio);
+//    }
 
     @PutMapping("/edit/{id}")
     public void updateUser(@PathVariable("id") int id, @RequestParam("name") String name,

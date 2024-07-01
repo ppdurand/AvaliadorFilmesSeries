@@ -21,10 +21,10 @@ public class UserService implements IService<User> {
         return ResponseEntity.status(HttpStatus.OK).body(userRepository.findAll());
     }
 
-    public void create(String name, String bio){
-        User user = new User(name, bio);
-        this.userRepository.save(user);
-    }
+//    public void create(String name, String bio){
+//        User user = new User(name, bio);
+//        this.userRepository.save(user);
+//    }
 
     public void update(int id, String name, String bio){
         EditUserDTO editUser = new EditUserDTO(name, bio);
