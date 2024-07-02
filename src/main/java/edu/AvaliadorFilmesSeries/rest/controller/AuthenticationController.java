@@ -1,9 +1,11 @@
 package edu.AvaliadorFilmesSeries.rest.controller;
 
 import edu.AvaliadorFilmesSeries.application.dto.AuthenticationDTO;
+import edu.AvaliadorFilmesSeries.application.dto.LoginResponseDTO;
 import edu.AvaliadorFilmesSeries.application.dto.RegisterUserDTO;
 import edu.AvaliadorFilmesSeries.domain.model.User;
 import edu.AvaliadorFilmesSeries.domain.repository.UserRepository;
+import edu.AvaliadorFilmesSeries.infra.security.TokenService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -23,13 +25,17 @@ public class AuthenticationController {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private TokenService tokenService;
 
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody @Valid AuthenticationDTO data){
         var usernamePassword = new UsernamePasswordAuthenticationToken(data.username(), data.password());
         var auth = this.authenticationManager.authenticate(usernamePassword);
 
-        return ResponseEntity.ok("Logado com Sucesso");
+        var token = tokenService.generateToken((User) auth.getPrincipal());
+
+        return ResponseEntity.ok(new LoginResponseDTO(token));
     }
 
     @PostMapping("/register")
