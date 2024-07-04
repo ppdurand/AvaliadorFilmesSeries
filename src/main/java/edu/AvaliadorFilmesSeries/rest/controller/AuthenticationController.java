@@ -6,6 +6,7 @@ import edu.AvaliadorFilmesSeries.application.dto.RegisterUserDTO;
 import edu.AvaliadorFilmesSeries.domain.model.User;
 import edu.AvaliadorFilmesSeries.domain.repository.UserRepository;
 import edu.AvaliadorFilmesSeries.infra.security.TokenService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping(value = "/auth", produces = {"application/json"})
+@Tag(name = "Avaliador")
 public class AuthenticationController {
     @Autowired
     private AuthenticationManager authenticationManager;
