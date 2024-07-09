@@ -72,3 +72,15 @@ Observação: Projeto ainda em construção
 
   - Documentação da API: https://www.omdbapi.com
   - Chave da API: Para conseguir sua chave da API e utilizar nesse projeto, basta se cadastrar no site e mandaram uma chave via e-mail
+ 
+  ## Camada de Segurança
+  O projeto possui uma camada de segurança que autentica os usuários e autoriza o acessso a determinadas funcionalidades a determinados usuários.
+  Tecnologias usadas: Spring Security 6 e JWT token
+
+  Endpoints que qualquer pessoa pode acessar:
+  - POST /auth/login
+  - POST /auth/register
+ 
+  Para todos os outros Endpoints, basta o usuario estar autenticado. Porém, "GET /api/search/{title}", endpoint que faz contato direto com a OMDB API, éreservado administradores
+
+  
